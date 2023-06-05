@@ -8,11 +8,6 @@ variable "image_uri" {
   type        = string
 }
 
-variable "desired_task_count" {
-  description = "ECS Service Desired Task Count"
-  type        = number
-}
-
 variable "iam_role_arn" {
   description = "IAM role arn"
   type        = string
