@@ -33,6 +33,12 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
               "value": "bar"
           }
       ],
+      "secrets": [
+          {
+              "name": "SSM_VALUE",
+              "valueFrom": "terraform-ecs-ssm-value"
+          }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
