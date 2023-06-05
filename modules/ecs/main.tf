@@ -27,6 +27,18 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
       "name": "ecs-task-definition",
       "image": "${var.image_uri}",
       "essential": true,
+      "environment": [
+          {
+              "name": "FOO",
+              "value": "bar"
+          }
+      ],
+      "secrets": [
+          {
+              "name": "SSM_VALUE",
+              "valueFrom": "terraform-ecs-ssm-value"
+          }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
