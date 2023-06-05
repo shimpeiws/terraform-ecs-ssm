@@ -27,6 +27,12 @@ resource "aws_ecs_task_definition" "ecs-task-definition" {
       "name": "ecs-task-definition",
       "image": "${var.image_uri}",
       "essential": true,
+      "environment": [
+          {
+              "name": "FOO",
+              "value": "bar"
+          }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
