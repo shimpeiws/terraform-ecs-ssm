@@ -65,3 +65,57 @@ resource "aws_security_group" "security-group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+data "aws_iam_policy_document" "vpc_endpoint" {
+  statement {
+    effect    = "Allow"
+    actions   = [ "*" ]
+    resources = [ "*" ]
+    principals {
+      type = "AWS"
+      identifiers = [ "*" ]
+    }
+  }
+}
+
+resource "aws_security_group" "ssm" {
+  name        = "terraform-ecs-ssm-dev-ssm-sg"
+  description = "terraform-ecs-ssm-dev-ssm-sg"
+  vpc_id      = aws_vpc.vpc.id
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol  = "tcp"
+    cidr_blocks = [
+      "10.0.0.0/16"
+    ]
+  }
+}
+
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_endpoint_type = "Interface"
+  vpc_id            = aws_vpc.vpc.id
+  service_name      = "com.amazonaws.ap-northeast-1.ssm"
+  policy            = data.aws_iam_policy_document.vpc_endpoint.json
+  subnet_ids = [
+    aws_subnet.private-0.id
+  ]
+  private_dns_enabled = true
+  security_group_ids = [
+    aws_security_group.ssm.id
+  ]
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+  vpc_endpoint_type = "Interface"
+  vpc_id            = aws_vpc.vpc.id
+  service_name      = "com.amazonaws.ap-northeast-1.ssmmessages"
+  policy            = data.aws_iam_policy_document.vpc_endpoint.json
+  subnet_ids = [
+    aws_subnet.private-0.id
+  ]
+  private_dns_enabled = true
+  security_group_ids = [
+    aws_security_group.ssm.id
+  ]
+}
